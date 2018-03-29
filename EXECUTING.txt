@@ -1,0 +1,6 @@
+$ sudo docker build -t graph .
+
+$ sudo docker run -it --volume ~/graskell:/home graph bash
+
+inside-the-docker-containerXXX$ cd home/
+inside-the-docker-containerXXX$ ghci
