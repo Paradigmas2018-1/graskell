@@ -5,6 +5,4 @@ services:
     container_name: graskell
     build: 
       context: .
-      dockerfile:  docker/Dockerfile
-    volumes:
-      - /graskell:/graskell 
+      dockerfile: docker/Dockerfile

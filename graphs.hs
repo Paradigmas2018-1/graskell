@@ -1,29 +1,61 @@
-import Data.Map.Strict (Map)
-import qualified Data.Map.Strict as Map
-import Data.Set (Set)
-import qualified Data.Set as Set
+import Data.Graph
+import Data.Function (on)
+import Data.List
 
---Nos do grafo
-type Vertex = Int
---Arestas do grafo, sempre entre dois nos
-type Edge = (Vertex,Vertex)
+-- Generates graph the graph
+-- range: the range of the graph
+-- ed: the edges of the graph 
+graphGen :: (Int,Int) -> [(Int,Int)] -> Graph
+graphGen range ed = buildG range ed
 
---Uma lista de vizinhos de um grafo
-newtype Neighbors = Neighbors {vertex :: Set Vertex}
---O Grafo, Uma lista de listas de vizinhos 
-newtype Graph = Graph {neighs :: Map Vertex(Set Vertex)}
+-- funcao auxiliar da neighbors , criada para facilitar a recursao
+-- ed:  arestas do grafo 
+-- vertex: o no que os vizinhos serao gerados
+-- aws: a resposta parcial da recurcao
+neighbors' :: [(Int,Int)] -> Int -> [Int] -> [Int]
+neighbors' [] vertex aws = aws
+neighbors' ed vertex aws =
+    if fst(head ed) == vertex
+        then neighbors' (tail ed) vertex (aws ++ [snd(head ed)])
+        else neighbors' (tail ed) vertex aws
 
--- a representacao de um grafo vazio
-emptyGraph :: Graph
-emptyGraph = Graph Map.empty
+-- funcao que gera os vizinho de um no do grafo
+-- graph: o grafo
+-- vexter: o no que os vizinho serao gerados
+neighbors :: Graph -> Int -> [Int]
+neighbors graph vertex = neighbors' (edges graph) vertex []
 
--- a representacao de uma lista vizinhos vazia
-emptyNeighbors ::  Neighbors
-emptyNeighbors = Neighbors Set.empty
+-- adiciona o caminho para os vizinhos na fila
+-- path: parte fixa do caminho 
+-- neigh: lista de vizinhos
+-- aws: a resposta parcial da recurcao
+fromltoll :: [Int] -> [Int] -> [[Int]] -> [[Int]]
+fromltoll path [] aws = aws
+fromltoll path neigh aws = fromltoll path (tail neigh) (aws ++ [path ++ [(head neigh)]])
 
--- adicionando um elemento em um grafo, ainda nao tem nenhuma validacao
--- so funciona se o grafo estiver vazio
--- TODO: adicionar caso do grafo nao vazio
-addVertex( v, Neighbors n, Graph g) =   Map.insert v n g 
-    
+-- atualiza a fila com caminhos dos vizinhos e a organiza
+-- queue: fila para ser atualizada
+-- neigh: lista vizinhos  
+bfs'' :: [[Int]] -> [Int] ->[[Int]]
+bfs'' queue [] = tail queue
+bfs'' queue neigh = (tail queue) ++ fromltoll (head queue) neigh  []
 
+-- funcao auxiliar da bfs, criada para auxiliar a recursao
+-- graph: o grafo
+-- queue: fila de caminhos
+-- end: numero procurado
+-- lista de nos visitados
+bfs' :: Graph -> [[Int]] -> Int -> [Int] -> [Int]
+bfs' graph [] end visited = []
+bfs' graph [[]] end visited = []
+bfs' graph queue end visited = 
+    if last(head queue) == end
+       then head queue
+       else bfs' graph (bfs''  queue ((neighbors graph (last(head queue))::[Int]) \\ visited ) ) end (visited ++ [last(head queue)])
+
+-- realiza a busca em largura no grafo
+-- graph: o grafo
+-- start: onde a busca comeca
+-- end: o no buscado
+bfs :: Graph -> Int -> Int -> [Int]
+bfs graph start end = bfs' graph [[start]] end []

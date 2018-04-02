@@ -1,6 +1,6 @@
 # GrasKell
 
-## How to execute 
+## How to execute
 
 1. Ensure you have Docker CE installed [See](https://docs.docker.com/install/)
 
@@ -8,12 +8,12 @@
 
 3. Execute the following commands
 
-``` bash 
-$ sudo docker-compose up 
+``` bash
+$ sudo docker-compose up --build
 ```
 
-``` bash 
-$ sudo docker run -it graph ghci
+``` bash
+$ sudo docker exec -it graskell ghci
 ```
 
 4. Execute your haskell commands
