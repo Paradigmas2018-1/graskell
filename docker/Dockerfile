@@ -1,5 +1,7 @@
 FROM debian:jessie
+
 ENV LANG C.UTF-8
+
 RUN echo 'deb http://ppa.launchpad.net/hvr/ghc/ubuntu trusty main' > /etc/apt/sources.list.d/ghc.list && \
     apt-key adv --keyserver keyserver.ubuntu.com --recv-keys F6F88286 && \
     apt-get update && \
@@ -14,4 +16,11 @@ RUN echo 'deb http://ppa.launchpad.net/hvr/ghc/ubuntu trusty main' > /etc/apt/so
     tar -xf stack.tar.gz -C /usr/local/bin --strip-components=1 && \
     /usr/local/bin/stack config set system-ghc --global true && \
     rm -rf "$GNUPGHOME" /var/lib/apt/lists/* /stack.tar.gz.asc /stack.tar.gz
+
 ENV PATH /root/.cabal/bin:/root/.local/bin:/opt/cabal/1.24/bin:/opt/ghc/8.0.2/bin:/opt/happy/1.19.5/bin:/opt/alex/3.1.7/bin:$PATH
+
+WORKDIR graskell/
+
+COPY . /graskell
+
+ENTRYPOINT bash -c "./bin/shwelcome.sh && sleep infinity"
