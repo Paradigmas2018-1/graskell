@@ -57,5 +57,8 @@ bfs' graph queue end visited =
 -- graph: o grafo
 -- start: onde a busca comeca
 -- end: o no buscado
-bfs :: Graph -> Int -> Int -> [Int]
-bfs graph start end = bfs' graph [[start]] end []
+smallerpath :: Graph -> Int -> Int -> [Int]
+smallerpath graph start end = bfs' graph [[start]] end []
+
+distance :: Graph -> Int -> Int -> Int
+distance graph start end = length(smallerpath graph start end) -1
