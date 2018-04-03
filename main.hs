@@ -1,29 +1,6 @@
-import Data.Graph
-import Data.Function (on)
+import Graph
 import Data.List
 
--- Generates graph the graph
--- range: the range of the graph
--- ed: the edges of the graph 
-graphGen :: (Int,Int) -> [(Int,Int)] -> Graph
-graphGen range ed = buildG range ed
-
--- funcao auxiliar da neighbors , criada para facilitar a recursao
--- ed:  arestas do grafo 
--- vertex: o no que os vizinhos serao gerados
--- aws: a resposta parcial da recurcao
-neighbors' :: [(Int,Int)] -> Int -> [Int] -> [Int]
-neighbors' [] vertex aws = aws
-neighbors' ed vertex aws =
-    if fst(head ed) == vertex
-        then neighbors' (tail ed) vertex (aws ++ [snd(head ed)])
-        else neighbors' (tail ed) vertex aws
-
--- funcao que gera os vizinho de um no do grafo
--- graph: o grafo
--- vexter: o no que os vizinho serao gerados
-neighbors :: Graph -> Int -> [Int]
-neighbors graph vertex = neighbors' (edges graph) vertex []
 
 -- adiciona o caminho para os vizinhos na fila
 -- path: parte fixa do caminho 
