@@ -54,8 +54,9 @@ smallerpath graph start end = bfs graph [[start]] end [] 'p'
 distance :: Graph -> Int -> Int -> Int
 distance graph start end = length(smallerpath graph start end) - 1
 
+-- returns a boolean that says wether the graph is strongly connected or not
 scc :: Graph -> Bool
 scc graph 
-    |isConected = True
+    |isConnected = True
     |otherwise = False
-    where isConected = (bfs graph [[head (listVertex graph)]] 1 [] 'v') == listVertex graph && (bfs (transposeG graph)  [[head (listVertex graph)]] 1 [] 'v') == listVertex graph
+    where isConnected = (bfs graph [[head (listVertex graph)]] 1 [] 'v') == listVertex graph && (bfs (transposeG graph)  [[head (listVertex graph)]] 1 [] 'v') == listVertex graph
