@@ -17,3 +17,11 @@ $ sudo docker exec -it graskell ghci
 ```
 
 4. Execute your haskell commands
+
+_example_
+
+- `:load Main`
+- `kruskal graph`
+- `kruskal anotherGraph`
+- `scc graph`
+- `scc anotherGraph`
