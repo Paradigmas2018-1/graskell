@@ -3,38 +3,40 @@ module Graph where
 import Tuple
 
 type Vertex  = Int
-type Edge = (Int, Int)
-type WEdge = (Int, Int, Int)
+type Edge = (Int, Int, Int)
 type Graph = ([Vertex], [Edge]) 
-type WGraph = ([Vertex], [WEdge]) 
-
 
 listrange :: Int -> Int -> [Int]  -> [Int]
-listrange first last aws = 
-    if first == last
-        then aws ++ [first]
-        else listrange (first+1) last (aws++[first])
+listrange first last aws 
+    |first > last = []
+    |first == last =  aws ++ [first]
+    |otherwise = listrange (first + 1) last (aws ++ [first])
 
-buildGfR :: (Int,Int) -> [Edge] -> Graph
-buildGfR range edges = ((listrange (fst range) (snd range) [] ), edges)
+verifyG :: [Vertex]-> [Edge] -> Bool
+verifyG vertixes [] = True
+verifyG vertixes edges
+    |isVerified = verifyG vertixes (tail edges)
+    |otherwise = False
+    where isVerified = elem (tFst(head edges)) vertixes && elem (tSnd(head edges)) vertixes 
 
+emptyG = ([],[])
+
+-- creates a directional graph
 buildG :: [Vertex] -> [Edge] -> Graph
-buildG vertex edges = (vertex,edges)
+buildG vertixes edges 
+    |isVerified = (vertixes,edges)
+    |otherwise = error "Unexistent Vertex "
+    where isVerified = verifyG vertixes edges
 
-buildWG :: (Int,Int) -> [WEdge] -> WGraph
-buildWG range edges = ((listrange (fst range) (snd range) [] ), edges)
+-- creates a directional graph from a range 
+buildGfR :: (Int,Int) -> [Edge] -> Graph
+buildGfR range edges = buildG (listrange (fst range) (snd range) [] ) edges
 
 listEdges :: Graph -> [Edge]
 listEdges graph = snd graph
 
-listWEdges :: WGraph -> [WEdge]
-listWEdges graph = snd graph
-
 listVertex :: Graph -> [Vertex]
 listVertex graph = fst graph
-
-listWVertex :: WGraph -> [Vertex]
-listWVertex graph = fst graph
 
 -- funcao auxiliar da neighbors , criada para facilitar a recursao
 -- ed:  arestas do grafo 
@@ -42,34 +44,27 @@ listWVertex graph = fst graph
 -- aws: a resposta parcial da recurcao
 neighbors' :: [Edge] -> Vertex -> [Vertex] -> [Vertex]
 neighbors' [] vertex aws = aws
-neighbors' ed vertex aws =
-    if fst(head ed) == vertex
-        then neighbors' (tail ed) vertex (aws ++ [snd(head ed)])
-        else neighbors' (tail ed) vertex aws
+neighbors' ed vertex aws
+    |isNeighbor = neighbors' (tail ed) vertex (aws ++ [tSnd(head ed)])
+    |otherwise = neighbors' (tail ed) vertex aws
+    where isNeighbor = tFst(head ed) == vertex
 
 -- funcao que gera os vizinho de um no do grafo
 -- graph: o grafo
 -- vexter: o no que os vizinho serao gerados
 neighbors :: Graph -> Vertex -> [Vertex]
-neighbors graph vertex = neighbors' (listEdges graph) vertex []
-
-wneighbors' :: [WEdge] -> Vertex -> [Vertex] -> [Vertex]
-wneighbors' [] vertex aws = aws
-wneighbors' ed vertex aws =
-    if tFst(head ed) == vertex
-        then wneighbors' (tail ed) vertex (aws ++ [tSnd(head ed)])
-        else wneighbors' (tail ed) vertex aws
-
--- funcao que gera os vizinho de um no do grafo
--- graph: o grafo
--- vexter: o no que os vizinho serao gerados
-wneighbors :: WGraph -> Vertex -> [Vertex]
-wneighbors graph vertex = wneighbors' (listWEdges graph) vertex []
-
+neighbors graph vertex
+    |isVerified = neighbors' (listEdges graph) vertex []
+    |otherwise = error "Unexistent Vertex"
+    where isVerified = elem vertex (listVertex graph)
+    
 reverseEdges :: [Edge] -> [Edge] -> [Edge]
 reverseEdges [] aws = aws
-reverseEdges edges aws = reverseEdges (tail edges) (aws ++ [(snd(head edges),fst(head edges))])
+reverseEdges edges aws = reverseEdges (tail edges) (aws ++ [(tSnd(head edges),tFst(head edges),tThd(head edges))])
 
+-- creates a non-directional graph
+buildNDG :: [Vertex] -> [Edge] -> Graph
+buildNDG vertexes edges = buildG vertexes (edges ++ (reverseEdges edges []))
 
 transposeG :: Graph -> Graph
 transposeG graph = buildG (listVertex graph) (reverseEdges (listEdges graph) [])
