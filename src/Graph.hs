@@ -38,10 +38,10 @@ listEdges graph = snd graph
 listVertex :: Graph -> [Vertex]
 listVertex graph = fst graph
 
--- funcao auxiliar da neighbors , criada para facilitar a recursao
--- ed:  arestas do grafo 
--- vertex: o no que os vizinhos serao gerados
--- aws: a resposta parcial da recurcao
+-- auxuliar neighbors functions, created to easen the recursion
+-- ed: graph edges
+-- vertex: the node that neighbors will be created from
+-- aws: the partial recursion answer
 neighbors' :: [Edge] -> Vertex -> [Vertex] -> [Vertex]
 neighbors' [] vertex aws = aws
 neighbors' ed vertex aws
@@ -49,9 +49,9 @@ neighbors' ed vertex aws
     |otherwise = neighbors' (tail ed) vertex aws
     where isNeighbor = tFst(head ed) == vertex
 
--- funcao que gera os vizinho de um no do grafo
--- graph: o grafo
--- vexter: o no que os vizinho serao gerados
+-- function that generates the graph nodes' neighbors
+-- graph: the own graph
+-- vexter: the node that neighbors will be created from
 neighbors :: Graph -> Vertex -> [Vertex]
 neighbors graph vertex
     |isVerified = neighbors' (listEdges graph) vertex []
