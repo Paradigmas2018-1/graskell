@@ -19,8 +19,8 @@ RUN echo 'deb http://ppa.launchpad.net/hvr/ghc/ubuntu trusty main' > /etc/apt/so
 
 ENV PATH /root/.cabal/bin:/root/.local/bin:/opt/cabal/1.24/bin:/opt/ghc/8.0.2/bin:/opt/happy/1.19.5/bin:/opt/alex/3.1.7/bin:$PATH
 
-WORKDIR graskell/
+WORKDIR graskell/src/
 
-COPY . /graskell
+COPY ./src/ /graskell/src/
 
-ENTRYPOINT bash -c "./bin/shwelcome.sh && sleep infinity"
+ENTRYPOINT bash -c "echo Welcome to Graskell && sleep infinity"
