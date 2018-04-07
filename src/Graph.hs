@@ -38,7 +38,7 @@ listEdges graph = snd graph
 listVertex :: Graph -> [Vertex]
 listVertex graph = fst graph
 
--- auxuliar neighbors functions, created to easen the recursion
+-- auxiliar neighbors functions, created to easen the recursion
 -- ed: graph edges
 -- vertex: the node that neighbors will be created from
 -- aws: the partial recursion answer

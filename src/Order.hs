@@ -2,7 +2,15 @@ module Order where
 
 import Graph
 import Tuple
-import Data.List.Split
+
+build :: ((a -> [a] -> [a]) -> [a] -> [a]) -> [a]
+build g = g (:) []
+
+chunksOf :: Int -> [e] -> [[e]]
+chunksOf i ls = map (take i) (build (splitter ls)) where
+  splitter :: [e] -> ([e] -> a -> a) -> a -> a
+  splitter [] _ n = n
+  splitter l c n  = l `c` splitter (drop i l) c n
 
 divide :: [Edge] -> [[Edge]]
 divide list = chunksOf ((div((length list) + 1 ) 2)) list
